@@ -42,17 +42,17 @@ public class Main {
 
     private static void printAllTasks(TaskManager taskManager) {
         System.out.println("\nЗадачи");
-        for (Task task : taskManager.getTasks().values()) {
+        for (Task task : taskManager.getTasks()) {
             System.out.println(task);
         }
 
         System.out.println("\nЭпики");
-        for (Epic epic : taskManager.getEpics().values()) {
+        for (Epic epic : taskManager.getEpics()) {
             System.out.println(epic);
         }
 
         System.out.println("\nПодзадачи");
-        for (Subtask subtask : taskManager.getSubtasks().values()) {
+        for (Subtask subtask : taskManager.getSubtasks()) {
             System.out.println(subtask);
         }
     }
