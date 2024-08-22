@@ -76,12 +76,12 @@ public class TaskManager {
         return epics.get(id);
     }
 
-    public HashMap<Integer, Subtask> getEpicSubtasks(Epic epic) {
-        HashMap<Integer, Subtask> res = new HashMap<>();
+    public ArrayList<Subtask> getEpicSubtasks(Epic epic) {
+        ArrayList<Subtask> res = new ArrayList<>();
 
         for (Subtask subtask : subtasks.values()) {
             if (subtask.getEpicId() == epic.getId()) {
-                res.put(subtask.getId(), subtask);
+                res.add(subtask);
             }
         }
 
