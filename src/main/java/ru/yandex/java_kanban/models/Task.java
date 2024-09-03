@@ -6,11 +6,11 @@ import ru.yandex.java_kanban.enums.TaskStatus;
 
 
 public class Task {
-    protected int id;
-    protected String name;
+    private int id;
+    private String name;
 
-    protected String description;
-    protected TaskStatus status;
+    private String description;
+    private TaskStatus status;
 
     public Task(String name, String description, TaskStatus status) {
         this.name = name;
@@ -34,6 +34,22 @@ public class Task {
         this.status = status;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null || obj.getClass() != this.getClass()) {
@@ -46,7 +62,7 @@ public class Task {
 
         Task task = (Task) obj;
 
-        return this.id == task.getId();
+        return this.getId() == task.getId();
     }
 
     @Override

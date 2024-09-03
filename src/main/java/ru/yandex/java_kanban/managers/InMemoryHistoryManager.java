@@ -8,7 +8,7 @@ import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private static final int LIMIT = 10;
-    private final ArrayList<Task> history;
+    private final List<Task> history;
 
     public InMemoryHistoryManager() {
         history = new ArrayList<>();
@@ -16,6 +16,10 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
+        if (task == null) {
+            return;
+        }
+
         if (history.size() >= LIMIT) {
             history.removeFirst();
         }
@@ -25,6 +29,6 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<Task> getHistory() {
-        return history;
+        return List.copyOf(history);
     }
 }

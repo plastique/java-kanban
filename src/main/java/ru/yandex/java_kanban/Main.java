@@ -30,6 +30,9 @@ public class Main {
         Subtask subtask3 = taskManager.createSubtask(
                 new Subtask("Subtask 3", "des 3", TaskStatus.NEW, epic2)
         );
+        Subtask subtask4 = taskManager.createSubtask(
+                new Subtask("Subtask 4", "des 4", TaskStatus.NEW, epic2)
+        );
 
         printAllTasks(taskManager);
 
@@ -40,6 +43,8 @@ public class Main {
 
         subtask3.setStatus(TaskStatus.DONE);
         subtask3 = taskManager.updateSubtask(subtask3);
+
+        taskManager.deleteSubtaskById(subtask4.getId());
 
         printAllTasks(taskManager);
     }

@@ -4,7 +4,6 @@ import ru.yandex.java_kanban.models.Epic;
 import ru.yandex.java_kanban.models.Subtask;
 import ru.yandex.java_kanban.models.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
@@ -13,7 +12,7 @@ public interface TaskManager {
 
     Task updateTask(Task task);
 
-    ArrayList<Task> getTasks();
+    List<Task> getTasks();
 
     Task getTaskById(int id);
 
@@ -26,11 +25,11 @@ public interface TaskManager {
 
     Epic updateEpic(Epic epic);
 
-    ArrayList<Epic> getEpics();
+    List<Epic> getEpics();
 
     Epic getEpicById(int id);
 
-    ArrayList<Subtask> getEpicSubtasks(int epicId);
+    List<Subtask> getEpicSubtasks(int epicId);
 
     void deleteEpics();
 
@@ -41,7 +40,7 @@ public interface TaskManager {
 
     Subtask updateSubtask(Subtask subtask);
 
-    ArrayList<Subtask> getSubtasks();
+    List<Subtask> getSubtasks();
 
     Subtask getSubtaskById(int id);
 

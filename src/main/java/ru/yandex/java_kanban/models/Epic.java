@@ -3,21 +3,22 @@ package ru.yandex.java_kanban.models;
 import ru.yandex.java_kanban.enums.TaskStatus;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Epic extends Task {
-    private ArrayList<Integer> subtaskIds;
+    private final List<Integer> subtaskIds;
 
     public Epic(String name, String description) {
         super(name, description, TaskStatus.NEW);
         subtaskIds = new ArrayList<>();
     }
 
-    public ArrayList<Integer> getSubtaskIds() {
+    public List<Integer> getSubtaskIds() {
         return subtaskIds;
     }
 
-    public void setSubtasksIds(ArrayList<Integer> subtaskIds) {
-        this.subtaskIds = subtaskIds;
+    public void deleteSubtasks() {
+        subtaskIds.clear();
     }
 
     public void addSubtask(Subtask subtask) {
@@ -36,17 +37,17 @@ public class Epic extends Task {
 
         Epic epic = (Epic) obj;
 
-        return this.id == epic.getId();
+        return this.getId() == epic.getId();
     }
 
     @Override
     public String toString() {
         return "Epic{" +
-                "id=" + id +
-                ", description='" + description + '\'' +
+                "id=" + getId() +
+                ", description='" + getDescription() + '\'' +
                 ", subtaskIds=" + subtaskIds +
-                ", name='" + name + '\'' +
-                ", status=" + status +
+                ", name='" + getName() + '\'' +
+                ", status=" + getStatus() +
                 '}';
     }
 }
