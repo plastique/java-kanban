@@ -1,6 +1,8 @@
 package ru.yandex.java_kanban;
 
 import ru.yandex.java_kanban.enums.TaskStatus;
+import ru.yandex.java_kanban.managers.Managers;
+import ru.yandex.java_kanban.managers.contracts.TaskManager;
 import ru.yandex.java_kanban.models.Epic;
 import ru.yandex.java_kanban.models.Subtask;
 import ru.yandex.java_kanban.models.Task;
@@ -9,7 +11,9 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Поехали!");
 
-        TaskManager taskManager = new TaskManager();
+        TaskManager taskManager = Managers.getDefault(
+                Managers.getDefaultHistory()
+        );
 
         Task task1 = taskManager.createTask(new Task("Task 1", "description 1", TaskStatus.NEW));
         Task task2 = taskManager.createTask(new Task("Task 2", "description 2", TaskStatus.NEW));
@@ -18,13 +22,13 @@ public class Main {
         Epic epic2 = taskManager.createEpic(new Epic("Epic 2", "des 2"));
 
         Subtask subtask1 = taskManager.createSubtask(
-                new Subtask("Subtask 1", "des 1", TaskStatus.NEW, epic1.getId())
+                new Subtask("Subtask 1", "des 1", TaskStatus.NEW, epic1)
         );
         Subtask subtask2 = taskManager.createSubtask(
-                new Subtask("Subtask 2", "des 2", TaskStatus.IN_PROGRESS, epic1.getId())
+                new Subtask("Subtask 2", "des 2", TaskStatus.IN_PROGRESS, epic1)
         );
         Subtask subtask3 = taskManager.createSubtask(
-                new Subtask("Subtask 3", "des 3", TaskStatus.NEW, epic2.getId())
+                new Subtask("Subtask 3", "des 3", TaskStatus.NEW, epic2)
         );
 
         printAllTasks(taskManager);

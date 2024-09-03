@@ -2,14 +2,12 @@ package ru.yandex.java_kanban.models;
 
 import ru.yandex.java_kanban.enums.TaskStatus;
 
-import java.util.Objects;
-
 public class Subtask extends Task {
     private int epicId;
 
-    public Subtask(String name, String description, TaskStatus status, int epicId) {
+    public Subtask(String name, String description, TaskStatus status, Epic epic) {
         super(name, description, status);
-        this.epicId = epicId;
+        this.epicId = epic.getId();
     }
 
     public int getEpicId() {

@@ -1,8 +1,9 @@
 package ru.yandex.java_kanban.models;
 
+import java.util.Objects;
+
 import ru.yandex.java_kanban.enums.TaskStatus;
 
-import java.util.Objects;
 
 public class Task {
     protected int id;

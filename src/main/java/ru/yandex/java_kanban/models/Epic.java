@@ -3,7 +3,6 @@ package ru.yandex.java_kanban.models;
 import ru.yandex.java_kanban.enums.TaskStatus;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Epic extends Task {
     private ArrayList<Integer> subtaskIds;
@@ -21,8 +20,8 @@ public class Epic extends Task {
         this.subtaskIds = subtaskIds;
     }
 
-    public void addSubtaskId(int subtaskId) {
-        subtaskIds.add(subtaskId);
+    public void addSubtask(Subtask subtask) {
+        subtaskIds.add(subtask.getId());
     }
 
     @Override
