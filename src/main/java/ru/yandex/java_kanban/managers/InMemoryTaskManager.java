@@ -108,8 +108,9 @@ public class InMemoryTaskManager implements TaskManager {
             return res;
         }
 
-        for (Subtask subtask : subtasks.values()) {
-            if (epic.getSubtaskIds().contains(subtask.getId())) {
+        for (int subtaskId : epic.getSubtaskIds()) {
+            Subtask subtask = subtasks.get(subtaskId);
+            if (subtask != null) {
                 res.add(subtask);
             }
         }
@@ -157,18 +158,14 @@ public class InMemoryTaskManager implements TaskManager {
         Subtask currentSubtask = subtasks.get(subtask.getId());
         int currentEpicId = currentSubtask.getEpicId();
 
-        subtasks.put(subtask.getId(), subtask);
-
-        Epic epic = epics.get(subtask.getEpicId());
-
-        if (epic != null) {
-            actualEpicStatus(epic);
-        }
+        currentSubtask.setName(subtask.getName());
+        currentSubtask.setDescription(subtask.getDescription());
+        currentSubtask.setStatus(subtask.getStatus());
 
         Epic currentEpic = epics.get(currentEpicId);
         actualEpicStatus(currentEpic);
 
-        return subtask;
+        return currentSubtask;
     }
 
     @Override

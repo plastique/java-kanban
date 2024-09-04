@@ -11,7 +11,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     private final List<Task> history;
 
     public InMemoryHistoryManager() {
-        history = new ArrayList<>();
+        history = new ArrayList<>(LIMIT);
     }
 
     @Override
