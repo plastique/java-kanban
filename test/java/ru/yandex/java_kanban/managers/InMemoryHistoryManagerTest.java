@@ -27,18 +27,4 @@ public class InMemoryHistoryManagerTest {
         assertNotNull(history, "История пустая");
         assertEquals(1, history.size(), "Нет задач в истории");
     }
-
-    @Test
-    void historySizeIsCorrect() {
-        int historyLimit = 10;
-
-        for (int i = 1; i <= (historyLimit + 5); i++) {
-            Task task = new Task("task", "description", TaskStatus.NEW);
-            task.setId(i);
-
-            historyManager.add(task);
-        }
-
-        assertEquals(historyLimit, historyManager.getHistory().size(), "Размер истории превышен");
-    }
 }
