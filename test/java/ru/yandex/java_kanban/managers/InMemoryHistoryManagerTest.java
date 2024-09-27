@@ -27,4 +27,39 @@ public class InMemoryHistoryManagerTest {
         assertNotNull(history, "История пустая");
         assertEquals(1, history.size(), "Нет задач в истории");
     }
+
+    @Test
+    void uniqueHistory() {
+        Task task = new Task("task", "description", TaskStatus.NEW);
+        task.setId(1);
+        Task task2 = new Task("task2", "description2", TaskStatus.NEW);
+        task2.setId(2);
+
+        historyManager.add(task);
+        historyManager.add(task2);
+        historyManager.add(task);
+        historyManager.add(task);
+        historyManager.add(task2);
+        List<Task> history = historyManager.getHistory();
+
+        assertNotNull(history, "История пустая");
+        assertEquals(2, history.size(), "История не уникальна");
+    }
+
+    @Test
+    void removeCorrectly() {
+        Task task = new Task("task", "description", TaskStatus.NEW);
+        task.setId(1);
+        Task task2 = new Task("task2", "description2", TaskStatus.NEW);
+        task2.setId(2);
+
+        historyManager.add(task);
+        historyManager.add(task2);
+        historyManager.remove(task2.getId());
+
+        List<Task> history = historyManager.getHistory();
+
+        assertNotNull(history, "История пустая");
+        assertEquals(1, history.size(), "Размер истори некорректный");
+    }
 }
