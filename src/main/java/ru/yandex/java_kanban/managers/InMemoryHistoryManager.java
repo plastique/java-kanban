@@ -6,7 +6,7 @@ import ru.yandex.java_kanban.models.Task;
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    public static class HistoryList {
+    private static class HistoryList {
         private Node first;
         private Node last;
         private final Map<Integer, Node> map = new HashMap<>();
@@ -16,21 +16,17 @@ public class InMemoryHistoryManager implements HistoryManager {
                 return;
             }
 
-            Node newNode = new Node(task, null, null);
+            Node newNode = new Node(task, last, null);
 
-            if (map.containsKey(task.getId())) {
-                removeNode(map.get(task.getId()));
-            }
+            removeNode(map.get(task.getId()));
 
             if (first == null) {
                 first = newNode;
-                last = newNode;
             } else {
-                newNode.setPrev(last);
                 last.setNext(newNode);
-                last = newNode;
             }
 
+            last = newNode;
             map.put(task.getId(), last);
         }
 
@@ -46,7 +42,9 @@ public class InMemoryHistoryManager implements HistoryManager {
 
             if (node == first) {
                 first = node.getNext();
-            } else if (node == last) {
+            }
+
+            if (node == last) {
                 last = node.getPrev();
             }
 
@@ -64,7 +62,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         private List<Task> getTasks() {
-            List<Task> res = new ArrayList<>();
+            List<Task> res = new ArrayList<>(map.size());
             Node el = first;
 
             while (el != null) {
