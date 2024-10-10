@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int increment = 0;
-    private final Map<Integer, Task> tasks;
-    private final Map<Integer, Epic> epics;
-    private final Map<Integer, Subtask> subtasks;
-    private final HistoryManager historyManager;
+    protected int increment = 0;
+    protected final Map<Integer, Task> tasks;
+    protected final Map<Integer, Epic> epics;
+    protected final Map<Integer, Subtask> subtasks;
+    protected final HistoryManager historyManager;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         tasks = new HashMap<>();
@@ -156,12 +156,7 @@ public class InMemoryTaskManager implements TaskManager {
         subtask.setId(getNewIncrement());
         subtasks.put(subtask.getId(), subtask);
 
-        Epic epic = epics.get(subtask.getEpicId());
-
-        if (epic != null) {
-            epic.addSubtask(subtask);
-            actualEpicStatus(epic);
-        }
+        actualEpicSubtasks(subtask);
 
         return subtask;
     }
@@ -237,6 +232,17 @@ public class InMemoryTaskManager implements TaskManager {
     // Other
     private int getNewIncrement() {
         return ++increment;
+    }
+
+    protected void actualEpicSubtasks(Subtask subtask) {
+        Epic epic = epics.get(subtask.getEpicId());
+
+        if (epic == null) {
+            return;
+        }
+
+        epic.addSubtask(subtask);
+        actualEpicStatus(epic);
     }
 
     private void actualEpicStatus(Epic epic) {
