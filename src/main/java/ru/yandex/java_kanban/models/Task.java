@@ -3,6 +3,7 @@ package ru.yandex.java_kanban.models;
 import java.util.Objects;
 
 import ru.yandex.java_kanban.enums.TaskStatus;
+import ru.yandex.java_kanban.enums.TaskType;
 
 
 public class Task {
@@ -11,6 +12,7 @@ public class Task {
 
     private String description;
     private TaskStatus status;
+    private final TaskType type = TaskType.TASK;
 
     public Task(String name, String description, TaskStatus status) {
         this.name = name;
@@ -24,6 +26,10 @@ public class Task {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public TaskType getType() {
+        return this.type;
     }
 
     public TaskStatus getStatus() {
