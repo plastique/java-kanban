@@ -14,7 +14,7 @@ import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
-    private static final String HEADER = "id,type,name,status,description,epic";
+    private static final String FILE_HEADER = "id,type,name,status,description,epic";
 
     public FileBackedTaskManager(File file) {
         super(Managers.getDefaultHistory());
@@ -32,7 +32,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try (
                 BufferedWriter bw = new BufferedWriter(new FileWriter(file));
         ) {
-            bw.write(HEADER + "\n");
+            bw.write(FILE_HEADER + "\n");
 
             for (Task task : getTasks()) {
                 bw.write(toString(task) + "\n");
