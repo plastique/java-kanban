@@ -57,7 +57,7 @@ public class FileBackendTaskManagerTest {
         Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
         final Epic savedEpic = taskManager.createEpic(epic);
 
-        Subtask subtask = new Subtask("Test addNewTask", "Test addNewTask description", TaskStatus.NEW, savedEpic);
+        Subtask subtask = new Subtask("Test addNewTask", "Test addNewTask description", TaskStatus.NEW, savedEpic.getId());
         final Subtask savedSubtask = taskManager.createSubtask(subtask);
 
         final List<Task> tasks = taskManager.getTasks();

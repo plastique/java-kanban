@@ -5,11 +5,10 @@ import ru.yandex.java_kanban.enums.TaskType;
 
 public class Subtask extends Task {
     private final int epicId;
-    private final TaskType type = TaskType.SUBTASK;
 
-    public Subtask(String name, String description, TaskStatus status, Epic epic) {
+    public Subtask(String name, String description, TaskStatus status, int epicId) {
         super(name, description, status);
-        this.epicId = epic.getId();
+        this.epicId = epicId;
     }
 
     public int getEpicId() {
@@ -18,7 +17,7 @@ public class Subtask extends Task {
 
     @Override
     public TaskType getType() {
-        return type;
+        return TaskType.SUBTASK;
     }
 
     @Override

@@ -57,7 +57,7 @@ class InMemoryTaskManagerTest {
         Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
         final Epic savedEpic = taskManager.createEpic(epic);
 
-        Subtask subtask = new Subtask("Test addNewTask", "Test addNewTask description", TaskStatus.NEW, epic);
+        Subtask subtask = new Subtask("Test addNewTask", "Test addNewTask description", TaskStatus.NEW, epic.getId());
 
         final Subtask savedSubtask = taskManager.createSubtask(subtask);
         final List<Subtask> subtasks = taskManager.getSubtasks();

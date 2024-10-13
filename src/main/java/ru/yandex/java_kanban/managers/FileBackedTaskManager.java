@@ -14,6 +14,7 @@ import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
+    private final String CSV_HEADER = "id,type,name,status,description,epic";
 
     public FileBackedTaskManager(File file) {
         super(Managers.getDefaultHistory());
@@ -31,7 +32,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try (
                 BufferedWriter bw = new BufferedWriter(new FileWriter(file));
         ) {
-            bw.write("id,type,name,status,description,epic\n");
+            bw.write(CSV_HEADER + "\n");
 
             for (Task task : getTasks()) {
                 bw.write(toString(task) + "\n");
@@ -167,7 +168,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         tasks.put(task.getId(), task);
                 }
 
-                increment = task.getId();
+                increment = Math.max(task.getId(), increment);
             }
         } catch (IOException e) {
             throw new ManagerLoadException("Не удалось загрузить файл");
@@ -185,7 +186,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         String epicId = "";
 
-        if (task instanceof Subtask) {
+        if (task.getType() == TaskType.SUBTASK) {
             epicId += ((Subtask) task).getEpicId();
         }
 
@@ -209,21 +210,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String name = fields[2];
         String description = fields[3];
 
-        switch (type) {
-            case EPIC:
-                task = new Epic(name, description);
-                break;
-
-            case SUBTASK:
-                Epic tmpEpic = new Epic("", "");
-                tmpEpic.setId(Integer.parseInt(fields[5]));
-
-                task = new Subtask(name, description, status, tmpEpic);
-                break;
-
-            default:
-                task = new Task(name, description, status);
-        }
+        task = switch (type) {
+            case EPIC -> new Epic(name, description);
+            case SUBTASK -> new Subtask(name, description, status, Integer.parseInt(fields[5]));
+            default -> new Task(name, description, status);
+        };
 
         task.setId(id);
 

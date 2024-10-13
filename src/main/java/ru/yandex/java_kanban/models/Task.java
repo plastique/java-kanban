@@ -12,7 +12,6 @@ public class Task {
 
     private String description;
     private TaskStatus status;
-    private final TaskType type = TaskType.TASK;
 
     public Task(String name, String description, TaskStatus status) {
         this.name = name;
@@ -29,7 +28,7 @@ public class Task {
     }
 
     public TaskType getType() {
-        return this.type;
+        return TaskType.TASK;
     }
 
     public TaskStatus getStatus() {

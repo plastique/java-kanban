@@ -18,8 +18,8 @@ public class SubtaskTest {
 
     @Test
     void sameSubtaskWithSameId() {
-        Subtask subtask1 = new Subtask("subtask 1", "descr 1", TaskStatus.NEW, epic);
-        Subtask subtask2 = new Subtask("subtask 2", "descr 2", TaskStatus.NEW, epic);
+        Subtask subtask1 = new Subtask("subtask 1", "descr 1", TaskStatus.NEW, epic.getId());
+        Subtask subtask2 = new Subtask("subtask 2", "descr 2", TaskStatus.NEW, epic.getId());
 
         subtask1.setId(1);
         subtask2.setId(subtask1.getId());
@@ -30,8 +30,8 @@ public class SubtaskTest {
 
     @Test
     void differentSubtaskWithDifferentId() {
-        Subtask subtask1 = new Subtask("task 1", "descr 1", TaskStatus.NEW, epic);
-        Subtask subtask2 = new Subtask("task 2", "descr 2", TaskStatus.NEW, epic);
+        Subtask subtask1 = new Subtask("task 1", "descr 1", TaskStatus.NEW, epic.getId());
+        Subtask subtask2 = new Subtask("task 2", "descr 2", TaskStatus.NEW, epic.getId());
 
         subtask1.setId(1);
         subtask2.setId(2);
