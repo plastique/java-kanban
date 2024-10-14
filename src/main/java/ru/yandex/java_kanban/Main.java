@@ -22,16 +22,16 @@ public class Main {
         Epic epic2 = taskManager.createEpic(new Epic("Epic 2", "des 2"));
 
         Subtask subtask1 = taskManager.createSubtask(
-                new Subtask("Subtask 1", "des 1", TaskStatus.NEW, epic1)
+                new Subtask("Subtask 1", "des 1", TaskStatus.NEW, epic1.getId())
         );
         Subtask subtask2 = taskManager.createSubtask(
-                new Subtask("Subtask 2", "des 2", TaskStatus.IN_PROGRESS, epic1)
+                new Subtask("Subtask 2", "des 2", TaskStatus.IN_PROGRESS, epic1.getId())
         );
         Subtask subtask3 = taskManager.createSubtask(
-                new Subtask("Subtask 3", "des 3", TaskStatus.NEW, epic2)
+                new Subtask("Subtask 3", "des 3", TaskStatus.NEW, epic2.getId())
         );
         Subtask subtask4 = taskManager.createSubtask(
-                new Subtask("Subtask 4", "des 4", TaskStatus.NEW, epic2)
+                new Subtask("Subtask 4", "des 4", TaskStatus.NEW, epic2.getId())
         );
 
         printAllTasks(taskManager);

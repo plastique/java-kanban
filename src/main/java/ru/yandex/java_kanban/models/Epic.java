@@ -1,6 +1,7 @@
 package ru.yandex.java_kanban.models;
 
 import ru.yandex.java_kanban.enums.TaskStatus;
+import ru.yandex.java_kanban.enums.TaskType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,11 @@ public class Epic extends Task {
 
     public void addSubtask(Subtask subtask) {
         subtaskIds.add(subtask.getId());
+    }
+
+    @Override
+    public TaskType getType() {
+        return TaskType.EPIC;
     }
 
     @Override
