@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,13 +53,26 @@ public class FileBackendTaskManagerTest {
 
     @Test
     void tasksAddedToStorage() throws IOException {
-        Task task = new Task("Test addNewTask", "Test addNewTask description", TaskStatus.NEW);
+        Task task = new Task(
+                "Test addNewTask",
+                "Test addNewTask description",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 10, 27, 10, 0),
+                Duration.ofMinutes(25)
+        );
         final Task savedTask = taskManager.createTask(task);
 
         Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
         final Epic savedEpic = taskManager.createEpic(epic);
 
-        Subtask subtask = new Subtask("Test addNewTask", "Test addNewTask description", TaskStatus.NEW, savedEpic.getId());
+        Subtask subtask = new Subtask(
+                "Test addNewTask",
+                "Test addNewTask description",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 10, 27, 12, 0),
+                Duration.ofMinutes(15),
+                savedEpic.getId()
+        );
         final Subtask savedSubtask = taskManager.createSubtask(subtask);
 
         final List<Task> tasks = taskManager.getTasks();

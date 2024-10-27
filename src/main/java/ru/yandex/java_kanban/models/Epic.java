@@ -3,15 +3,19 @@ package ru.yandex.java_kanban.models;
 import ru.yandex.java_kanban.enums.TaskStatus;
 import ru.yandex.java_kanban.enums.TaskType;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Epic extends Task {
     private final List<Integer> subtaskIds;
+    private LocalDateTime endTime;
 
     public Epic(String name, String description) {
-        super(name, description, TaskStatus.NEW);
+        super(name, description, TaskStatus.NEW, null, Duration.ZERO);
         subtaskIds = new ArrayList<>();
+        endTime = null;
     }
 
     public List<Integer> getSubtaskIds() {
@@ -29,6 +33,15 @@ public class Epic extends Task {
     @Override
     public TaskType getType() {
         return TaskType.EPIC;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
     @Override
@@ -54,6 +67,8 @@ public class Epic extends Task {
                 ", subtaskIds=" + subtaskIds +
                 ", name='" + getName() + '\'' +
                 ", status=" + getStatus() +
+                ", startTime=" + getStartTime() +
+                ", duration=" + getDuration() +
                 '}';
     }
 }

@@ -4,6 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.java_kanban.enums.TaskStatus;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -18,8 +21,22 @@ public class SubtaskTest {
 
     @Test
     void sameSubtaskWithSameId() {
-        Subtask subtask1 = new Subtask("subtask 1", "descr 1", TaskStatus.NEW, epic.getId());
-        Subtask subtask2 = new Subtask("subtask 2", "descr 2", TaskStatus.NEW, epic.getId());
+        Subtask subtask1 = new Subtask(
+                "subtask 1",
+                "descr 1",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 10, 27, 10, 0),
+                Duration.ofMinutes(10),
+                epic.getId()
+        );
+        Subtask subtask2 = new Subtask(
+                "subtask 2",
+                "descr 2",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 10, 27, 10, 30),
+                Duration.ofMinutes(25),
+                epic.getId()
+        );
 
         subtask1.setId(1);
         subtask2.setId(subtask1.getId());
@@ -30,8 +47,22 @@ public class SubtaskTest {
 
     @Test
     void differentSubtaskWithDifferentId() {
-        Subtask subtask1 = new Subtask("task 1", "descr 1", TaskStatus.NEW, epic.getId());
-        Subtask subtask2 = new Subtask("task 2", "descr 2", TaskStatus.NEW, epic.getId());
+        Subtask subtask1 = new Subtask(
+                "task 1",
+                "descr 1",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 10, 27, 10, 0),
+                Duration.ofMinutes(45),
+                epic.getId()
+        );
+        Subtask subtask2 = new Subtask(
+                "task 2",
+                "descr 2",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 10, 27, 11, 0),
+                Duration.ofMinutes(20),
+                epic.getId()
+        );
 
         subtask1.setId(1);
         subtask2.setId(2);

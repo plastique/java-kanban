@@ -7,6 +7,8 @@ import ru.yandex.java_kanban.models.Epic;
 import ru.yandex.java_kanban.models.Subtask;
 import ru.yandex.java_kanban.models.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,7 +26,13 @@ class InMemoryTaskManagerTest {
 
     @Test
     void taskAddedToStorage() {
-        Task task = new Task("Test addNewTask", "Test addNewTask description", TaskStatus.NEW);
+        Task task = new Task(
+                "Test addNewTask",
+                "Test addNewTask description",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 10, 27, 10, 0),
+                Duration.ofMinutes(10)
+        );
 
         final Task savedTask = taskManager.createTask(task);
         final List<Task> tasks = taskManager.getTasks();
@@ -57,7 +65,14 @@ class InMemoryTaskManagerTest {
         Epic epic = new Epic("Test addNewTask", "Test addNewTask description");
         final Epic savedEpic = taskManager.createEpic(epic);
 
-        Subtask subtask = new Subtask("Test addNewTask", "Test addNewTask description", TaskStatus.NEW, epic.getId());
+        Subtask subtask = new Subtask(
+                "Test addNewTask",
+                "Test addNewTask description",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 10, 27, 10, 30),
+                Duration.ofMinutes(35),
+                epic.getId()
+        );
 
         final Subtask savedSubtask = taskManager.createSubtask(subtask);
         final List<Subtask> subtasks = taskManager.getSubtasks();
