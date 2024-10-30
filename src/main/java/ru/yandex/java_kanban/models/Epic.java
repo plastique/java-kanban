@@ -3,7 +3,6 @@ package ru.yandex.java_kanban.models;
 import ru.yandex.java_kanban.enums.TaskStatus;
 import ru.yandex.java_kanban.enums.TaskType;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
