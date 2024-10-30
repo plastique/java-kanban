@@ -85,13 +85,46 @@ public class InMemoryHistoryManagerTest {
         );
         task2.setId(2);
 
+        Task task3 = new Task(
+                "task3",
+                "description3",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 10, 28, 10, 0),
+                Duration.ofMinutes(5)
+        );
+        task2.setId(3);
+
+        Task task4 = new Task(
+                "task4",
+                "description4",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 10, 28, 12, 0),
+                Duration.ofMinutes(5)
+        );
+        task2.setId(4);
+
+        Task task5 = new Task(
+                "task5",
+                "description5",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 10, 28, 14, 0),
+                Duration.ofMinutes(5)
+        );
+        task2.setId(5);
+
         historyManager.add(task);
         historyManager.add(task2);
-        historyManager.remove(task2.getId());
+        historyManager.add(task3);
+        historyManager.add(task4);
+        historyManager.add(task5);
+        historyManager.remove(task3.getId());
+        historyManager.remove(task.getId());
+        historyManager.remove(task5.getId());
+        historyManager.remove(6);
 
         List<Task> history = historyManager.getHistory();
 
         assertNotNull(history, "История пустая");
-        assertEquals(1, history.size(), "Размер истории некорректный");
+        assertEquals(2, history.size(), "Размер истории некорректный");
     }
 }

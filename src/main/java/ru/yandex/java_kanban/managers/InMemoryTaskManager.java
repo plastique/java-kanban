@@ -1,6 +1,7 @@
 package ru.yandex.java_kanban.managers;
 
 import ru.yandex.java_kanban.enums.TaskStatus;
+import ru.yandex.java_kanban.exceptions.TaskIntersectionException;
 import ru.yandex.java_kanban.managers.contracts.HistoryManager;
 import ru.yandex.java_kanban.managers.contracts.TaskManager;
 import ru.yandex.java_kanban.models.Epic;
@@ -75,10 +76,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTasks() {
-        for (Task task : tasks.values()) {
+        tasks.values().forEach(task -> {
             historyManager.remove(task.getId());
             deletePrioritizedTask(task);
-        }
+        });
         tasks.clear();
     }
 
@@ -131,25 +132,25 @@ public class InMemoryTaskManager implements TaskManager {
             return res;
         }
 
-        for (int subtaskId : epic.getSubtaskIds()) {
+        epic.getSubtaskIds().forEach(subtaskId -> {
             Subtask subtask = subtasks.get(subtaskId);
             if (subtask != null) {
                 res.add(subtask);
             }
-        }
+        });
 
         return res;
     }
 
     @Override
     public void deleteEpics() {
-        for (Epic epic : epics.values()) {
+        epics.values().forEach(epic -> {
             historyManager.remove(epic.getId());
-        }
-        for (Subtask subtask : subtasks.values()) {
+        });
+        subtasks.values().forEach(subtask -> {
             historyManager.remove(subtask.getId());
             deletePrioritizedTask(subtask);
-        }
+        });
         epics.clear();
         subtasks.clear();
     }
@@ -164,11 +165,11 @@ public class InMemoryTaskManager implements TaskManager {
 
         historyManager.remove(id);
 
-        for (Integer subtaskId : epic.getSubtaskIds()) {
+        epic.getSubtaskIds().forEach(subtaskId -> {
             deletePrioritizedTask(subtasks.get(subtaskId));
             subtasks.remove(subtaskId);
             historyManager.remove(subtaskId);
-        }
+        });
     }
 
     // Subtasks
@@ -221,16 +222,16 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteSubtasks() {
-        for (Subtask subtask : subtasks.values()) {
+        subtasks.values().forEach(subtask -> {
             historyManager.remove(subtask.getId());
             deletePrioritizedTask(subtask);
-        }
+        });
         subtasks.clear();
 
-        for (Epic epic : epics.values()) {
+        epics.values().forEach(epic -> {
             epic.deleteSubtasks();
             actualEpicData(epic);
-        }
+        });
     }
 
     @Override
@@ -382,7 +383,7 @@ public class InMemoryTaskManager implements TaskManager {
         prioritizedTasks.remove(task);
     }
 
-    private void checkTaskIntersection(Task task) throws RuntimeException {
+    private void checkTaskIntersection(Task task) throws TaskIntersectionException {
         if (task == null) {
             return;
         }
@@ -395,12 +396,18 @@ public class InMemoryTaskManager implements TaskManager {
         }
 
         prioritizedTasks.forEach(prioritizedTask -> {
-            if ((prioritizedTask.getStartTime().isBefore(startTime)
+            if (prioritizedTask.equals(task)) {
+                return;
+            }
+
+            if (prioritizedTask.getStartTime().isEqual(startTime)
+                || prioritizedTask.getEndTime().isEqual(endTime)
+                || (prioritizedTask.getStartTime().isBefore(startTime)
                         && prioritizedTask.getEndTime().isAfter(startTime))
                 || (prioritizedTask.getStartTime().isBefore(endTime)
                         && prioritizedTask.getEndTime().isAfter(endTime))
             ) {
-                throw new RuntimeException(String.format(
+                throw new TaskIntersectionException(String.format(
                         "Найдено пересечение в задачах: %s и %s",
                         task.getName(),
                         prioritizedTask.getName()
