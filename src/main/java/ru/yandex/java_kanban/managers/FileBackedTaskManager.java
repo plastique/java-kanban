@@ -163,11 +163,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     case SUBTASK:
                         Subtask subtask = (Subtask) task;
                         subtasks.put(task.getId(), subtask);
+                        if (subtask.getStartTime() != null) {
+                            addPrioritizedTask(subtask);
+                        }
                         actualEpicSubtasks(subtask);
                         break;
 
                     default:
                         tasks.put(task.getId(), task);
+                        if (task.getStartTime() != null) {
+                            addPrioritizedTask(task);
+                        }
                 }
 
                 increment = Math.max(task.getId(), increment);
@@ -193,8 +199,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
 
         fields.add(epicId);
-        fields.add(task.getStartTime() != null ? task.getStartTime().toString() : null);
-        fields.add(String.valueOf(task.getDuration().toMinutes()));
+        fields.add(
+                task.getStartTime() == null
+                    ? null
+                    : task.getStartTime().toString()
+        );
+        fields.add(
+                task.getDuration() == null
+                    ? null
+                    : String.valueOf(task.getDuration().toMinutes())
+        );
 
         return String.join(",", fields);
     }
@@ -213,10 +227,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         TaskStatus status = TaskStatus.valueOf(fields[4]);
         String name = fields[2];
         String description = fields[3];
-        LocalDateTime startTime = fields[6] != null
+        LocalDateTime startTime = fields[6].equals("null")
                 ? LocalDateTime.parse(fields[6])
                 : null;
-        Duration duration = Duration.ofMinutes(Long.parseLong(fields[7]));
+        Duration duration = fields[7].equals("null")
+            ? null
+            : Duration.ofMinutes(Long.parseLong(fields[7]));
 
         task = switch (type) {
             case EPIC -> new Epic(name, description);
