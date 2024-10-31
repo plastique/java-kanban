@@ -163,17 +163,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     case SUBTASK:
                         Subtask subtask = (Subtask) task;
                         subtasks.put(task.getId(), subtask);
-                        if (subtask.getStartTime() != null) {
-                            addPrioritizedTask(subtask);
-                        }
+                        addPrioritizedTask(subtask);
                         actualEpicSubtasks(subtask);
                         break;
 
                     default:
                         tasks.put(task.getId(), task);
-                        if (task.getStartTime() != null) {
-                            addPrioritizedTask(task);
-                        }
+                        addPrioritizedTask(task);
                 }
 
                 increment = Math.max(task.getId(), increment);

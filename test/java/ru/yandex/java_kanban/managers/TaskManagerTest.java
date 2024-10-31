@@ -254,7 +254,7 @@ abstract class TaskManagerTest<T extends TaskManager>{
 
         List<Task> tasks = taskManager.getPrioritizedTasks();
 
-        assertEquals(List.of(task1), tasks);
+        assertEquals(List.of(task2, task1), tasks);
     }
 
     @Test
@@ -330,7 +330,7 @@ abstract class TaskManagerTest<T extends TaskManager>{
         task1.setStartTime(LocalDateTime.of(2024, 10, 29, 20, 0));
         task1.setDuration(Duration.ofMinutes(10));
 
-        task2.setStartTime(LocalDateTime.of(2024, 10, 29, 20, 10));
+        task2.setStartTime(LocalDateTime.of(2024, 10, 29, 20, 11));
         task2.setDuration(Duration.ofMinutes(10));
 
         assertThrowsExactly(TaskIntersectionException.class, () -> {

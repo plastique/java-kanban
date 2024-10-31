@@ -366,12 +366,6 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
 
-        LocalDateTime startTime = task.getStartTime();
-
-        if (startTime == null) {
-            return;
-        }
-
         prioritizedTasks.add(task);
     }
 
@@ -392,23 +386,20 @@ public class InMemoryTaskManager implements TaskManager {
         }
 
         prioritizedTasks.forEach(prioritizedTask -> {
-            if (prioritizedTask.getId() == task.getId()) {
+            if (
+                prioritizedTask.getStartTime() == null
+                || prioritizedTask.getId() == task.getId()
+                || endTime.isBefore(prioritizedTask.getStartTime())
+                || startTime.isAfter(prioritizedTask.getEndTime())
+            ) {
                 return;
             }
 
-            if (prioritizedTask.getStartTime().isEqual(startTime)
-                || prioritizedTask.getEndTime().isEqual(endTime)
-                || (prioritizedTask.getStartTime().isBefore(startTime)
-                        && prioritizedTask.getEndTime().isAfter(startTime))
-                || (prioritizedTask.getStartTime().isBefore(endTime)
-                        && prioritizedTask.getEndTime().isAfter(endTime))
-            ) {
-                throw new TaskIntersectionException(String.format(
-                        "Найдено пересечение в задачах: %s и %s",
-                        task.getName(),
-                        prioritizedTask.getName()
-                ));
-            }
+            throw new TaskIntersectionException(String.format(
+                "Найдено пересечение в задачах: %s (%s) и %s (%s)",
+                task.getName(), task.getStartTime(),
+                prioritizedTask.getName(), prioritizedTask.getStartTime()
+            ));
         });
     }
 }
