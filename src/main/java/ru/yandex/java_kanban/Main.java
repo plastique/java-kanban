@@ -7,6 +7,9 @@ import ru.yandex.java_kanban.models.Epic;
 import ru.yandex.java_kanban.models.Subtask;
 import ru.yandex.java_kanban.models.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Main {
     public static void main(String[] args) {
         System.out.println("Поехали!");
@@ -15,23 +18,63 @@ public class Main {
                 Managers.getDefaultHistory()
         );
 
-        Task task1 = taskManager.createTask(new Task("Task 1", "description 1", TaskStatus.NEW));
-        Task task2 = taskManager.createTask(new Task("Task 2", "description 2", TaskStatus.NEW));
+        Task task1 = taskManager.createTask(new Task(
+                "Task 1",
+                "description 1",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 10, 27, 10, 0),
+                Duration.ofMinutes(45)
+        ));
+        Task task2 = taskManager.createTask(new Task(
+                "Task 2",
+                "description 2",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 10, 27, 11, 0),
+                Duration.ofMinutes(60)
+        ));
 
         Epic epic1 = taskManager.createEpic(new Epic("Epic 1", "des 1"));
         Epic epic2 = taskManager.createEpic(new Epic("Epic 2", "des 2"));
 
         Subtask subtask1 = taskManager.createSubtask(
-                new Subtask("Subtask 1", "des 1", TaskStatus.NEW, epic1.getId())
+                new Subtask(
+                        "Subtask 1",
+                        "des 1",
+                        TaskStatus.NEW,
+                        LocalDateTime.of(2024, 10, 27, 12, 0),
+                        Duration.ofMinutes(15),
+                        epic1.getId()
+                )
         );
         Subtask subtask2 = taskManager.createSubtask(
-                new Subtask("Subtask 2", "des 2", TaskStatus.IN_PROGRESS, epic1.getId())
+                new Subtask(
+                        "Subtask 2",
+                        "des 2",
+                        TaskStatus.IN_PROGRESS,
+                        LocalDateTime.of(2024, 10, 27, 15, 0),
+                        Duration.ofMinutes(20),
+                        epic1.getId()
+                )
         );
         Subtask subtask3 = taskManager.createSubtask(
-                new Subtask("Subtask 3", "des 3", TaskStatus.NEW, epic2.getId())
+                new Subtask(
+                        "Subtask 3",
+                        "des 3",
+                        TaskStatus.NEW,
+                        LocalDateTime.of(2024, 10, 27, 15, 20),
+                        Duration.ofMinutes(30),
+                        epic2.getId()
+                )
         );
         Subtask subtask4 = taskManager.createSubtask(
-                new Subtask("Subtask 4", "des 4", TaskStatus.NEW, epic2.getId())
+                new Subtask(
+                        "Subtask 4",
+                        "des 4",
+                        TaskStatus.NEW,
+                        LocalDateTime.of(2024, 10, 27, 17, 0),
+                        Duration.ofMinutes(40),
+                        epic2.getId()
+                )
         );
 
         printAllTasks(taskManager);

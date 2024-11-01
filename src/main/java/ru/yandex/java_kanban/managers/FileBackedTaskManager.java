@@ -9,12 +9,14 @@ import ru.yandex.java_kanban.models.Subtask;
 import ru.yandex.java_kanban.models.Task;
 
 import java.io.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
-    private static final String FILE_HEADER = "id,type,name,status,description,epic";
+    private static final String FILE_HEADER = "id,type,name,status,description,epic,startTime,duration";
 
     public FileBackedTaskManager(File file) {
         super(Managers.getDefaultHistory());
@@ -161,11 +163,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     case SUBTASK:
                         Subtask subtask = (Subtask) task;
                         subtasks.put(task.getId(), subtask);
+                        addPrioritizedTask(subtask);
                         actualEpicSubtasks(subtask);
                         break;
 
                     default:
                         tasks.put(task.getId(), task);
+                        addPrioritizedTask(task);
                 }
 
                 increment = Math.max(task.getId(), increment);
@@ -191,6 +195,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
 
         fields.add(epicId);
+        fields.add(
+                task.getStartTime() == null
+                    ? null
+                    : task.getStartTime().toString()
+        );
+        fields.add(
+                task.getDuration() == null
+                    ? null
+                    : String.valueOf(task.getDuration().toMinutes())
+        );
 
         return String.join(",", fields);
     }
@@ -209,11 +223,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         TaskStatus status = TaskStatus.valueOf(fields[4]);
         String name = fields[2];
         String description = fields[3];
+        LocalDateTime startTime = fields[6].equals("null")
+                ? LocalDateTime.parse(fields[6])
+                : null;
+        Duration duration = fields[7].equals("null")
+            ? null
+            : Duration.ofMinutes(Long.parseLong(fields[7]));
 
         task = switch (type) {
             case EPIC -> new Epic(name, description);
-            case SUBTASK -> new Subtask(name, description, status, Integer.parseInt(fields[5]));
-            default -> new Task(name, description, status);
+            case SUBTASK -> new Subtask(name, description, status, startTime, duration, Integer.parseInt(fields[5]));
+            default -> new Task(name, description, status, startTime, duration);
         };
 
         task.setId(id);

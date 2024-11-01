@@ -3,11 +3,21 @@ package ru.yandex.java_kanban.models;
 import ru.yandex.java_kanban.enums.TaskStatus;
 import ru.yandex.java_kanban.enums.TaskType;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Subtask extends Task {
     private final int epicId;
 
-    public Subtask(String name, String description, TaskStatus status, int epicId) {
-        super(name, description, status);
+    public Subtask(
+            String name,
+            String description,
+            TaskStatus status,
+            LocalDateTime startTime,
+            Duration duration,
+            int epicId
+    ) {
+        super(name, description, status, startTime, duration);
         this.epicId = epicId;
     }
 
@@ -43,6 +53,8 @@ public class Subtask extends Task {
                 ", name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", status=" + getStatus() +
+                ", startTime=" + getStartTime() +
+                ", duration=" + getDuration() +
                 '}';
     }
 }
