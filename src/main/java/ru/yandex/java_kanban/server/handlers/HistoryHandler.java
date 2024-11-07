@@ -1,6 +1,5 @@
 package ru.yandex.java_kanban.server.handlers;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import ru.yandex.java_kanban.managers.contracts.TaskManager;
 
@@ -13,8 +12,6 @@ public class HistoryHandler extends BaseHttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        Gson gson = new Gson();
-
         if (getMethod(exchange).equals("GET")) {
             sendText(exchange, gson.toJson(taskManager.getHistory()));
             return;

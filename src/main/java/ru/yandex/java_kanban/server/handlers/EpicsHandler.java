@@ -1,8 +1,6 @@
 package ru.yandex.java_kanban.server.handlers;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import ru.yandex.java_kanban.exceptions.ManagerSaveException;
 import ru.yandex.java_kanban.exceptions.NotFoundException;
 import ru.yandex.java_kanban.managers.contracts.TaskManager;
 import ru.yandex.java_kanban.models.Epic;
@@ -19,8 +17,7 @@ public class EpicsHandler extends BaseHttpHandler {
         String[] pathElements = getPathElements(exchange);
         boolean hasId = pathElements.length >= 2;
         boolean requireSubtasks = pathElements.length == 3 && pathElements[2].equals("subtasks");
-        int id = Integer.parseInt(pathElements[1]);
-        Gson gson = new Gson();
+        int id = hasId ? Integer.parseInt(pathElements[1]) : 0;
         Epic epic = null;
 
         switch (getMethod(exchange)) {
@@ -30,16 +27,17 @@ public class EpicsHandler extends BaseHttpHandler {
                     return;
                 }
 
-                if (requireSubtasks) {
-                    sendText(exchange, gson.toJson(taskManager.getEpicSubtasks(id)));
-                    return;
-                }
-
                 try {
-                    epic = getEpicById(id);
-                    sendText(exchange, gson.toJson(epic));
+                    if (requireSubtasks) {
+                        sendText(exchange, gson.toJson(taskManager.getEpicSubtasks(id)));
+                        return;
+                    }
+                    sendText(exchange, gson.toJson(getEpicById(id)));
                 } catch (NotFoundException e) {
                     sendNotFound(exchange, "Эпик не найден");
+                } catch (Throwable e) {
+                    System.out.println("Error:" + e.getMessage());
+                    sendServerError(exchange, "Внутренняя ошибка");
                 }
                 break;
 
@@ -53,20 +51,15 @@ public class EpicsHandler extends BaseHttpHandler {
                     epic = taskManager.createEpic(epic);
                     sendCreated(exchange, gson.toJson(epic));
                     return;
-                } catch (ManagerSaveException e) {
-                    sendServerError(exchange, "Внутренняя ошибка, не удалось сохранить эпик");
+                } catch (Throwable e) {
+                    System.out.println("Error:" + e.getMessage());
+                    sendServerError(exchange, "Внутренняя ошибка");
                 }
-
                 break;
 
             case "DELETE":
-                try {
-                    epic = getEpicById(id);
-                    taskManager.deleteSubtaskById(id);
-                    sendText(exchange, "Эпик удален");
-                } catch (NotFoundException e) {
-                    sendNotFound(exchange, "Эпик не найден");
-                }
+                taskManager.deleteSubtaskById(id);
+                sendText(exchange, "Эпик удален");
                 break;
 
             default:

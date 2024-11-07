@@ -1,8 +1,6 @@
 package ru.yandex.java_kanban.server.handlers;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import ru.yandex.java_kanban.exceptions.ManagerSaveException;
 import ru.yandex.java_kanban.exceptions.NotFoundException;
 import ru.yandex.java_kanban.exceptions.TaskIntersectionException;
 import ru.yandex.java_kanban.managers.contracts.TaskManager;
@@ -19,8 +17,7 @@ public class TasksHandler extends BaseHttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         String[] pathElements = getPathElements(exchange);
         boolean hasId = pathElements.length == 2;
-        int id = Integer.parseInt(pathElements[1]);
-        Gson gson = new Gson();
+        int id = hasId ? Integer.parseInt(pathElements[1]) : 0;
         Task task = null;
 
         switch (getMethod(exchange)) {
@@ -35,8 +32,10 @@ public class TasksHandler extends BaseHttpHandler {
                     sendText(exchange, gson.toJson(task));
                 } catch (NotFoundException e) {
                     sendNotFound(exchange, "Задача не найдена");
+                } catch (Throwable e) {
+                    System.out.println("Error:" + e.getMessage());
+                    sendServerError(exchange, "Внутренняя ошибка");
                 }
-
                 break;
 
             case "POST":
@@ -62,20 +61,15 @@ public class TasksHandler extends BaseHttpHandler {
                     sendNotFound(exchange, "Задача не найдена");
                 } catch (TaskIntersectionException e) {
                     sendHasInteractions(exchange, "Задача пересекается с существующей");
-                } catch (ManagerSaveException e) {
-                    sendServerError(exchange, "Внутренняя ошибка, не удалось сохранить задачу");
+                } catch (Throwable e) {
+                    System.out.println("Error:" + e.getMessage());
+                    sendServerError(exchange, "Внутренняя ошибка");
                 }
-
                 break;
 
             case "DELETE":
-                try {
-                    task = getTaskById(id);
-                    taskManager.deleteTaskById(id);
-                    sendText(exchange, "Задача удалена");
-                } catch (NotFoundException e) {
-                    sendNotFound(exchange, "Задача не найдена");
-                }
+                taskManager.deleteTaskById(id);
+                sendText(exchange, "Задача удалена");
                 break;
 
             default:

@@ -7,6 +7,7 @@ import ru.yandex.java_kanban.server.handlers.*;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 
 public class HttpTaskServer {
     private static final int PORT = 8080;
@@ -31,6 +32,7 @@ public class HttpTaskServer {
 
     public void start() {
         server.start();
+        System.out.println("Server started on port: " + PORT);
     }
 
     public void stop() {

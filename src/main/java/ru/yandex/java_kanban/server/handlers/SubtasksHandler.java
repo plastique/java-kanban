@@ -1,8 +1,6 @@
 package ru.yandex.java_kanban.server.handlers;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import ru.yandex.java_kanban.exceptions.ManagerSaveException;
 import ru.yandex.java_kanban.exceptions.NotFoundException;
 import ru.yandex.java_kanban.exceptions.TaskIntersectionException;
 import ru.yandex.java_kanban.managers.contracts.TaskManager;
@@ -19,8 +17,7 @@ public class SubtasksHandler extends BaseHttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         String[] pathElements = getPathElements(exchange);
         boolean hasId = pathElements.length == 2;
-        int id = Integer.parseInt(pathElements[1]);
-        Gson gson = new Gson();
+        int id = hasId ? Integer.parseInt(pathElements[1]) : 0;
         Subtask subtask = null;
 
         switch (getMethod(exchange)) {
@@ -35,6 +32,9 @@ public class SubtasksHandler extends BaseHttpHandler {
                     sendText(exchange, gson.toJson(subtask));
                 } catch (NotFoundException e) {
                     sendNotFound(exchange, "Подзадача не найдена");
+                } catch (Throwable e) {
+                    System.out.println("Error:" + e.getMessage());
+                    sendServerError(exchange, "Внутренняя ошибка, не удалось сохранить эпик");
                 }
                 break;
 
@@ -61,20 +61,15 @@ public class SubtasksHandler extends BaseHttpHandler {
                     sendNotFound(exchange, "Подзадача не найдена");
                 } catch (TaskIntersectionException e) {
                     sendHasInteractions(exchange, "Подзадача пересекается с существующей");
-                } catch (ManagerSaveException e) {
-                    sendServerError(exchange, "Внутренняя ошибка, не удалось сохранить подзадачу");
+                } catch (Exception e) {
+                    System.out.println("Error:" + e.getMessage());
+                    sendServerError(exchange, "Внутренняя ошибка");
                 }
-
                 break;
 
             case "DELETE":
-                try {
-                    subtask = getSubtaskById(id);
-                    taskManager.deleteSubtaskById(id);
-                    sendText(exchange, "Подзадача удалена");
-                } catch (NotFoundException e) {
-                    sendNotFound(exchange, "Подзадача не найдена");
-                }
+                taskManager.deleteSubtaskById(id);
+                sendText(exchange, "Подзадача удалена");
                 break;
 
             default:

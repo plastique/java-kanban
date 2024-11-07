@@ -1,12 +1,18 @@
 package ru.yandex.java_kanban.server.handlers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import ru.yandex.java_kanban.managers.contracts.TaskManager;
+import ru.yandex.java_kanban.server.adapters.DurationAdapter;
+import ru.yandex.java_kanban.server.adapters.LocalDateTimeAdapter;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 abstract class BaseHttpHandler implements HttpHandler {
     protected static final int HTTP_OK = 200;
@@ -17,9 +23,14 @@ abstract class BaseHttpHandler implements HttpHandler {
     protected static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     protected final TaskManager taskManager;
+    protected final Gson gson;
 
     public BaseHttpHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
+        gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .create();
     }
 
     protected String getMethod(HttpExchange exchange) {
