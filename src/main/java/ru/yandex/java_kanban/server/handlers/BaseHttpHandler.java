@@ -36,7 +36,12 @@ abstract class BaseHttpHandler implements HttpHandler {
     }
 
     protected HttpMethod getMethod(HttpExchange exchange) {
-        return HttpMethod.valueOf(exchange.getRequestMethod());
+        try {
+            return HttpMethod.valueOf(exchange.getRequestMethod());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid request method: " + exchange.getRequestMethod());
+            return null;
+        }
     }
 
     protected String[] getPathElements(HttpExchange exchange) {
