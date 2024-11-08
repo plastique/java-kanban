@@ -58,7 +58,7 @@ public class EpicsHandler extends BaseHttpHandler {
                 break;
 
             case "DELETE":
-                taskManager.deleteSubtaskById(id);
+                taskManager.deleteEpicById(id);
                 sendText(exchange, "Эпик удален");
                 break;
 

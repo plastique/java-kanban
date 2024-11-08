@@ -7,7 +7,6 @@ import ru.yandex.java_kanban.server.handlers.*;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
 
 public class HttpTaskServer {
     private static final int PORT = 8080;
@@ -15,12 +14,14 @@ public class HttpTaskServer {
     private final TaskManager taskManager;
 
     public static void main(String[] args) throws IOException {
-        HttpTaskServer server = new HttpTaskServer();
+        HttpTaskServer server = new HttpTaskServer(
+            Managers.getDefault(Managers.getDefaultHistory())
+        );
         server.start();
     }
 
-    public HttpTaskServer() throws IOException {
-        taskManager = Managers.getDefault(Managers.getDefaultHistory());
+    public HttpTaskServer(TaskManager taskManager) throws IOException {
+        this.taskManager = taskManager;
         server = HttpServer.create(new InetSocketAddress(PORT), 0);
 
         server.createContext("/tasks", new TasksHandler(taskManager));
@@ -37,5 +38,6 @@ public class HttpTaskServer {
 
     public void stop() {
         server.stop(1);
+        System.out.println("Server stopped");
     }
 }
