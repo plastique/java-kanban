@@ -21,7 +21,7 @@ public class TasksHandler extends BaseHttpHandler {
         Task task = null;
 
         switch (getMethod(exchange)) {
-            case "GET":
+            case GET:
                 if (!hasId) {
                     sendText(exchange, gson.toJson(taskManager.getTasks()));
                     return;
@@ -38,7 +38,7 @@ public class TasksHandler extends BaseHttpHandler {
                 }
                 break;
 
-            case "POST":
+            case POST:
                 task = gson.fromJson(
                     new String(exchange.getRequestBody().readAllBytes(), DEFAULT_CHARSET),
                     Task.class
@@ -67,13 +67,13 @@ public class TasksHandler extends BaseHttpHandler {
                 }
                 break;
 
-            case "DELETE":
+            case DELETE:
                 taskManager.deleteTaskById(id);
                 sendText(exchange, "Задача удалена");
                 break;
 
             default:
-                sendNotFound(exchange, "Not Found");
+                sendNotAllowed(exchange, "Not Allowed");
         }
     }
 

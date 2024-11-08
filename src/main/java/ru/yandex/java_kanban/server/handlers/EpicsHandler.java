@@ -21,7 +21,7 @@ public class EpicsHandler extends BaseHttpHandler {
         Epic epic = null;
 
         switch (getMethod(exchange)) {
-            case "GET":
+            case GET:
                 if (!hasId) {
                     sendText(exchange, gson.toJson(taskManager.getEpics()));
                     return;
@@ -41,7 +41,7 @@ public class EpicsHandler extends BaseHttpHandler {
                 }
                 break;
 
-            case "POST":
+            case POST:
                 epic = gson.fromJson(
                     new String(exchange.getRequestBody().readAllBytes(), DEFAULT_CHARSET),
                     Epic.class
@@ -57,13 +57,13 @@ public class EpicsHandler extends BaseHttpHandler {
                 }
                 break;
 
-            case "DELETE":
+            case DELETE:
                 taskManager.deleteEpicById(id);
                 sendText(exchange, "Эпик удален");
                 break;
 
             default:
-                sendNotFound(exchange, "Not Found");
+                sendNotAllowed(exchange, "Not Allowed");
         }
     }
 

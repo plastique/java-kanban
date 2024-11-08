@@ -21,7 +21,7 @@ public class SubtasksHandler extends BaseHttpHandler {
         Subtask subtask = null;
 
         switch (getMethod(exchange)) {
-            case "GET":
+            case GET:
                 if (!hasId) {
                     sendText(exchange, gson.toJson(taskManager.getSubtasks()));
                     return;
@@ -38,7 +38,7 @@ public class SubtasksHandler extends BaseHttpHandler {
                 }
                 break;
 
-            case "POST":
+            case POST:
                 subtask = gson.fromJson(
                     new String(exchange.getRequestBody().readAllBytes(), DEFAULT_CHARSET),
                     Subtask.class
@@ -67,13 +67,13 @@ public class SubtasksHandler extends BaseHttpHandler {
                 }
                 break;
 
-            case "DELETE":
+            case DELETE:
                 taskManager.deleteSubtaskById(id);
                 sendText(exchange, "Подзадача удалена");
                 break;
 
             default:
-                sendNotFound(exchange, "Not Found");
+                sendNotAllowed(exchange, "Not Allowed");
         }
     }
 

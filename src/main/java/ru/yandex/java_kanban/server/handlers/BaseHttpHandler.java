@@ -7,6 +7,7 @@ import com.sun.net.httpserver.HttpHandler;
 import ru.yandex.java_kanban.managers.contracts.TaskManager;
 import ru.yandex.java_kanban.server.adapters.DurationAdapter;
 import ru.yandex.java_kanban.server.adapters.LocalDateTimeAdapter;
+import ru.yandex.java_kanban.server.enums.HttpMethod;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -18,6 +19,7 @@ abstract class BaseHttpHandler implements HttpHandler {
     protected static final int HTTP_OK = 200;
     protected static final int HTTP_CREATED = 201;
     protected static final int HTTP_NOT_FOUND = 404;
+    protected static final int HTTP_METHOD_NOT_ALLOWED = 405;
     protected static final int HTTP_NOT_ACCEPTABLE = 406;
     protected static final int HTTP_INTERNAL_SERVER_ERROR = 500;
     protected static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
@@ -33,8 +35,8 @@ abstract class BaseHttpHandler implements HttpHandler {
                 .create();
     }
 
-    protected String getMethod(HttpExchange exchange) {
-        return exchange.getRequestMethod();
+    protected HttpMethod getMethod(HttpExchange exchange) {
+        return HttpMethod.valueOf(exchange.getRequestMethod());
     }
 
     protected String[] getPathElements(HttpExchange exchange) {
@@ -51,6 +53,10 @@ abstract class BaseHttpHandler implements HttpHandler {
 
     protected void sendNotFound(HttpExchange h, String text) throws IOException {
         sendResponse(h, text, HTTP_NOT_FOUND);
+    }
+
+    protected void sendNotAllowed(HttpExchange h, String text) throws IOException {
+        sendResponse(h, text, HTTP_METHOD_NOT_ALLOWED);
     }
 
     protected void sendHasInteractions(HttpExchange h, String text) throws IOException {
